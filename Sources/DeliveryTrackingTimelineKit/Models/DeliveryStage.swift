@@ -7,6 +7,7 @@
 
 import Foundation
 import Foundation
+import Foundation
 
 public enum DeliveryStageType: String, CaseIterable, Identifiable {
     case ordered = "Ordered"
@@ -27,24 +28,41 @@ public enum StageStatus {
     case upcoming
 }
 
-public struct DeliveryStage: Identifiable {
-    public let id: UUID
-    public let type: DeliveryStageType
-    public let title: String
-    public let timestamp: Date?
-    public let status: StageStatus
-    /// Detailed shipment logs for this stage (for stages after `shipped`)
-    public let events: [TrackingEvent]
+public struct TrackingEvent: Identifiable {
+    public let id = UUID()
+    public let city: String
+    public let hubName: String
+    public let description: String
+    public let arrivalTime: Date?
 
     public init(
-        id: UUID = UUID(),
+        city: String,
+        hubName: String,
+        description: String,
+        arrivalTime: Date? = nil
+    ) {
+        self.city = city
+        self.hubName = hubName
+        self.description = description
+        self.arrivalTime = arrivalTime
+    }
+}
+
+public struct DeliveryStage: Identifiable {
+    public let id = UUID()
+    public let type: DeliveryStageType
+    public let title: String
+    public var timestamp: Date?
+    public var status: StageStatus
+    public var events: [TrackingEvent]
+
+    public init(
         type: DeliveryStageType,
         title: String? = nil,
         timestamp: Date? = nil,
         status: StageStatus,
         events: [TrackingEvent] = []
     ) {
-        self.id = id
         self.type = type
         self.title = title ?? type.rawValue
         self.timestamp = timestamp

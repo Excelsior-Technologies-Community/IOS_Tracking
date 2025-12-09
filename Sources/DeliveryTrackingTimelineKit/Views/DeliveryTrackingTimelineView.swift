@@ -7,89 +7,98 @@
 
 import Foundation
 import SwiftUI
+import SwiftUI
 
 public struct DeliveryTrackingTimelineView: View {
 
-    private let stages: [DeliveryStage]
-    private let currentStage: DeliveryStageType
-    private let isLoading: Bool
-    private let onRefresh: (() -> Void)?
+    let stages: [DeliveryStage]
+    let currentStage: DeliveryStageType
 
-    public init(
-        stages: [DeliveryStage],
-        currentStage: DeliveryStageType,
-        isLoading: Bool = false,
-        onRefresh: (() -> Void)? = nil
-    ) {
+    public init(stages: [DeliveryStage], currentStage: DeliveryStageType) {
         self.stages = stages
         self.currentStage = currentStage
-        self.isLoading = isLoading
-        self.onRefresh = onRefresh
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            headerSection
-
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    ForEach(Array(stages.enumerated()), id: \.element.id) { index, stage in
-                        TimelineRowView(
-                            stage: stage,
-                            isFirst: index == 0,
-                            isLast: index == stages.count - 1
-                        )
-                    }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(stages.enumerated()), id: \.element.id) { idx, stage in
+                    TimelineRowView(
+                        stage: stage,
+                        isFirst: idx == 0,
+                        isLast: idx == stages.count - 1
+                    )
                 }
-                .padding(.top, 8)
-            }
+                DeliveryTrackingAdminView()
+}
+            .padding()
         }
-        .padding()
-    }
-
-    private var headerSection: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Delivery Status")
-                    .font(.headline)
-
-                Text(statusDescription(currentStage))
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-
-            Spacer()
-
-            if isLoading {
-                ProgressView()
-            } else if let onRefresh = onRefresh {
-                Button(action: onRefresh) {
-                    Image(systemName: "arrow.clockwise")
-                }
-                .buttonStyle(.bordered)
-            }
-        }
-    }
-
-    private func statusDescription(_ status: DeliveryStageType) -> String {
-        switch status {
-        case .ordered:
-            return "We’ve received your order."
-        case .packed:
-            return "Your items are packed."
-        case .shipped:
-            return "Your order has left the warehouse."
-        case .inTransit:
-            return "Your order is on the way."
-        case .arrivedCityHub:
-            return "Arrived at your city’s hub."
-        case .arrivedWarehouse:
-            return "Arrived at local warehouse."
-        case .outForDelivery:
-            return "Our delivery partner is on the way."
-        case .delivered:
-            return "Order delivered."
-        }
+        .navigationTitle("Tracking Timeline")
     }
 }
 
+ 
+class DeliveryTrackingViewModel: ObservableObject {
+
+    @Published var stages: [DeliveryStage] = []
+    @Published var currentStageIndex: Int = 0
+    @Published var showLocationPicker: Bool = false
+    @Published var pendingStageUpdate: DeliveryStageType?
+
+    let availableCities = ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar", "Mumbai", "Delhi"]
+
+    init() { setupInitialStages() }
+
+    private func setupInitialStages() {
+        stages = DeliveryStageType.allCases.enumerated().map { idx, type in
+            DeliveryStage(
+                type: type,
+                timestamp: idx == 0 ? Date() : nil,
+                status: idx == 0 ? .current : .upcoming
+            )
+        }
+    }
+
+    func moveToNextStage(_ stage: DeliveryStageType) {
+
+        if needsLocation(stage) {
+            pendingStageUpdate = stage
+            showLocationPicker = true
+        } else {
+            updateStage(stage, city: nil)
+        }
+    }
+
+    func updateStage(_ stage: DeliveryStageType, city: String?) {
+
+        guard let idx = stages.firstIndex(where: { $0.type == stage }) else { return }
+
+        stages[idx].timestamp = Date()
+        stages[idx].status = .completed
+
+        if let city = city {
+            let event = TrackingEvent(
+                city: city,
+                hubName: "\(city) Junction Hub",
+                description: "Processed at \(city) hub",
+                arrivalTime: Date()
+            )
+            stages[idx].events.append(event)
+        }
+
+        if idx + 1 < stages.count {
+            stages[idx + 1].status = .current
+        }
+
+        for i in 0..<idx { stages[i].status = .completed }
+    }
+
+    private func needsLocation(_ stage: DeliveryStageType) -> Bool {
+        switch stage {
+        case .arrivedCityHub, .arrivedWarehouse, .inTransit:
+            return true
+        default:
+            return false
+        }
+    }
+}
