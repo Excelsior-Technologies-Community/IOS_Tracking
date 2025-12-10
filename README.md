@@ -26,12 +26,6 @@ Done! 🎉
 2. Click **Add Local…**
 3. Select the folder:
 
-```
-SmartBillios-Excelsior-Technologies-Community-IOS_Tracking
-```
-
----
-
 # 📌 **Importing the Package**
 
 In any SwiftUI file, simply:
