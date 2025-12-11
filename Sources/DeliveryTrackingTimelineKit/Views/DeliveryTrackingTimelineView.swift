@@ -29,25 +29,25 @@ public struct DeliveryTrackingTimelineView: View {
                         isLast: idx == stages.count - 1
                     )
                 }
-                DeliveryTrackingAdminView()
+//                DeliveryTrackingAdminView()
 }
             .padding()
         }
         .navigationTitle("Tracking Timeline")
     }
 }
-
- 
 class DeliveryTrackingViewModel: ObservableObject {
 
     @Published var stages: [DeliveryStage] = []
-    @Published var currentStageIndex: Int = 0
     @Published var showLocationPicker: Bool = false
     @Published var pendingStageUpdate: DeliveryStageType?
 
-    let availableCities = ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar", "Mumbai", "Delhi"]
+    let apiCities: [String]   // <-- cities from API
 
-    init() { setupInitialStages() }
+    init(cities: [String]) {
+        self.apiCities = cities
+        setupInitialStages()
+    }
 
     private func setupInitialStages() {
         stages = DeliveryStageType.allCases.enumerated().map { idx, type in
@@ -60,7 +60,6 @@ class DeliveryTrackingViewModel: ObservableObject {
     }
 
     func moveToNextStage(_ stage: DeliveryStageType) {
-
         if needsLocation(stage) {
             pendingStageUpdate = stage
             showLocationPicker = true
@@ -70,17 +69,18 @@ class DeliveryTrackingViewModel: ObservableObject {
     }
 
     func updateStage(_ stage: DeliveryStageType, city: String?) {
-
         guard let idx = stages.firstIndex(where: { $0.type == stage }) else { return }
 
         stages[idx].timestamp = Date()
         stages[idx].status = .completed
 
         if let city = city {
+            print("Stage \(stage.rawValue) updated at city: \(city)")
+
             let event = TrackingEvent(
                 city: city,
-                hubName: "\(city) Junction Hub",
-                description: "Processed at \(city) hub",
+                hubName: "\(city) Hub",
+                description: "Processed at \(city)",
                 arrivalTime: Date()
             )
             stages[idx].events.append(event)
@@ -89,8 +89,6 @@ class DeliveryTrackingViewModel: ObservableObject {
         if idx + 1 < stages.count {
             stages[idx + 1].status = .current
         }
-
-        for i in 0..<idx { stages[i].status = .completed }
     }
 
     private func needsLocation(_ stage: DeliveryStageType) -> Bool {
@@ -102,3 +100,6 @@ class DeliveryTrackingViewModel: ObservableObject {
         }
     }
 }
+
+
+

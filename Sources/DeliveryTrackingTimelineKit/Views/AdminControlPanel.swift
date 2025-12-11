@@ -66,14 +66,14 @@ struct StageButton: View {
         .disabled(isCompleted)
     }
 }
- 
+
 struct LocationPickerSheet: View {
     @ObservedObject var viewModel: DeliveryTrackingViewModel
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationView {
-            List(viewModel.availableCities, id: \.self) { city in
+            List(viewModel.apiCities, id: \.self) { city in
                 Button {
                     if let pending = viewModel.pendingStageUpdate {
                         viewModel.updateStage(pending, city: city)
@@ -89,21 +89,20 @@ struct LocationPickerSheet: View {
                 }
             }
             .navigationTitle("Choose Hub Location")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") { dismiss() }
-                }
-            }
         }
     }
 }
- 
+
 
 public struct DeliveryTrackingAdminView: View {
 
-    @StateObject private var viewModel = DeliveryTrackingViewModel()
+    @StateObject private var viewModel: DeliveryTrackingViewModel
+    private var apiCities: [String]
 
-    public init() {}
+    public init(_ cities: [String]) {
+        self.apiCities = cities
+        _viewModel = StateObject(wrappedValue: DeliveryTrackingViewModel(cities: cities))
+    }
 
     public var body: some View {
         NavigationView {
@@ -123,7 +122,6 @@ public struct DeliveryTrackingAdminView: View {
                 }
 
                 Divider()
-
                 AdminControlPanel(viewModel: viewModel)
             }
             .navigationTitle("Delivery Tracking")
@@ -133,5 +131,6 @@ public struct DeliveryTrackingAdminView: View {
         }
     }
 }
+
 
  
