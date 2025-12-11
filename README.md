@@ -1,5 +1,5 @@
  
-# 🛠 **Installation (Swift Package Manager)**
+#   **Installation (Swift Package Manager)**
 
 ### **Option 1 — Add using GitHub URL (Recommended)**
 
@@ -9,13 +9,13 @@
 3. Enter the package URL:
 
 ```
-https://github.com/noman1303/SmartBillios-Excelsior-Technologies-Community-IOS_Tracking
+https://github.com/Excelsior-Technologies-Community/IOS_Tracking
 ```
 
 4. Select branch: **Stages**
 5. Add package to your app target
 
-Done! 🎉
+Done! 
 
 ---
 
@@ -26,7 +26,7 @@ Done! 🎉
 2. Click **Add Local…**
 3. Select the folder:
 
-# 📌 **Importing the Package**
+#  **Importing the Package**
 
 In any SwiftUI file, simply:
 
@@ -36,7 +36,7 @@ import DeliveryTrackingTimelineKit
 
 ---
 
-# 📦 **Data Models**
+#   **Data Models**
 
 ## **DeliveryStage**
 
@@ -63,7 +63,7 @@ TrackingEvent(
 
 ---
 
-# 🧪 **Usage Example (No API Needed)**
+#   **Usage Example (No API Needed)**
 
 You can test this package using **static dummy data**.
 
@@ -109,7 +109,7 @@ DeliveryTrackingTimelineView(
 
 ---
 
-# 🎛 **Customizable Parameters**
+#   **Customizable Parameters**
 
 | Parameter      | Type                | Description                |
 | -------------- | ------------------- | -------------------------- |
@@ -120,7 +120,7 @@ DeliveryTrackingTimelineView(
 
 ---
 
-# 🔥 Features
+#   Features
 
 ### ✔ Amazon-style tracking UI
 
@@ -138,7 +138,7 @@ DeliveryTrackingTimelineView(
 
 ---
 
-# 🧩 **When Should Developers Use This Package?**
+#   **When Should Developers Use This Package?**
 
 This package is ideal for:
 
@@ -150,7 +150,7 @@ This package is ideal for:
 
 ---
 
-# 🤝 **Contribution**
+#   **Contribution**
 
 Feel free to contribute!
 Open a PR or Issue on GitHub.
