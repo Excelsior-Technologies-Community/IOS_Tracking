@@ -1,34 +1,36 @@
- 
-#   **Installation (Swift Package Manager)**
+Here is the **final cleaned README.md** with **no emojis**, fully formatted and ready for GitHub.
 
-### **Option 1 — Add using GitHub URL (Recommended)**
+---
 
-1. Open **Xcode**
-2. Go to
-   **File → Add Package Dependencies**
-3. Enter the package URL:
+# Delivery Tracking Timeline Kit
+
+A plug-and-play Swift Package that provides a complete order tracking system with:
+
+* Amazon-style delivery timeline
+* Dynamic shipment events
+* City/hub logs
+* Admin controls for updating delivery stages
+* API-driven hub location selection
+
+---
+
+# Installation (Swift Package Manager)
+
+### Option 1 — Install via GitHub URL
+
+1. Open Xcode → File → Add Package Dependencies
+2. Enter:
 
 ```
 https://github.com/Excelsior-Technologies-Community/IOS_Tracking
 ```
 
-4. Select branch: **Stages**
-5. Add package to your app target
-
-Done! 
+3. Select branch: `Stages`
+4. Add the package to your app target
 
 ---
 
-### **Option 2 — Add as Local Package (For Testing)**
-
-1. Go to
-   **File → Add Package Dependencies**
-2. Click **Add Local…**
-3. Select the folder:
-
-#  **Importing the Package**
-
-In any SwiftUI file, simply:
+# Importing the Package
 
 ```swift
 import DeliveryTrackingTimelineKit
@@ -36,9 +38,30 @@ import DeliveryTrackingTimelineKit
 
 ---
 
-#   **Data Models**
+# Core Components
 
-## **DeliveryStage**
+### 1. DeliveryTrackingAdminView
+
+Complete tracking UI + admin controls.
+Allows selecting hub locations passed dynamically from API.
+
+### 2. DeliveryTrackingTimelineView
+
+Displays user-facing tracking timeline only.
+
+### 3. TrackingEvent
+
+Represents an event within a stage.
+
+### 4. DeliveryStage
+
+Represents a single stage in the timeline (ordered, packed, shipped, etc.)
+
+---
+
+# Data Models
+
+## DeliveryStage
 
 ```swift
 DeliveryStage(
@@ -48,112 +71,81 @@ DeliveryStage(
     events: [...]
 )
 ```
-
-## **TrackingEvent**
-
-```swift
-TrackingEvent(
-    city: "Ahmedabad",
-    hubName: "Gujarat Facility",
-    description: "Departed from Ahmedabad Hub",
-    arrivalTime: Date(),
-    departureTime: nil
-)
-```
-
+ 
 ---
 
-#   **Usage Example (No API Needed)**
-
-You can test this package using **static dummy data**.
-
-### **Step 1 — Create sample tracking data**
-
-```swift
-let sampleStages: [DeliveryStage] = [
-    DeliveryStage(type: .ordered, status: .completed),
-    DeliveryStage(type: .packed, status: .completed),
-    DeliveryStage(type: .shipped, status: .completed),
-    DeliveryStage(
-        type: .inTransit,
-        status: .current,
-        events: [
-            TrackingEvent(
-                city: "Ahmedabad",
-                hubName: "Gujarat Facility",
-                description: "Departed from Ahmedabad Hub"
-            )
-        ]
-    ),
-    DeliveryStage(type: .arrivedCityHub, status: .upcoming),
-    DeliveryStage(type: .arrivedWarehouse, status: .upcoming),
-    DeliveryStage(type: .outForDelivery, status: .upcoming),
-    DeliveryStage(type: .delivered, status: .upcoming)
-]
-```
-
----
-
-### **Step 2 — Display the tracking timeline UI**
+### Step 2 — Show Timeline UI
 
 ```swift
 DeliveryTrackingTimelineView(
     stages: sampleStages,
-    currentStage: .inTransit,
-    isLoading: false,
-    onRefresh: {
-        print("Refreshing…")
-    }
+    currentStage: .inTransit
 )
 ```
 
 ---
 
-#   **Customizable Parameters**
+# Dynamic API-Based City Selection
 
-| Parameter      | Type                | Description                |
-| -------------- | ------------------- | -------------------------- |
-| `stages`       | `[DeliveryStage]`   | Tracking data for timeline |
-| `currentStage` | `DeliveryStageType` | Highlights active stage    |
-| `isLoading`    | `Bool`              | Shows loader in header     |
-| `onRefresh`    | `() -> Void`        | Optional refresh callback  |
+If your app fetches hubs from an API, simply pass them to:
 
----
+### DeliveryTrackingAdminView
 
-#   Features
+```swift
+DeliveryTrackingAdminView(["Mumbai", "Ahmedabad", "Goa"])
+```
 
-### ✔ Amazon-style tracking UI
-
-### ✔ Fully reusable Swift Package
-
-### ✔ Works with static or dynamic data
-
-### ✔ Expandable shipment logs
-
-### ✔ Minimal setup
-
-### ✔ Supports Dark Mode & accessibility
-
-### ✔ SwiftUI 100%
+This will show these exact cities inside the location picker when stages require hub selection.
 
 ---
 
-#   **When Should Developers Use This Package?**
+# Customizable Parameters
 
-This package is ideal for:
+| Parameter      | Type                | Description            |
+| -------------- | ------------------- | ---------------------- |
+| `stages`       | `[DeliveryStage]`   | Timeline data          |
+| `currentStage` | `DeliveryStageType` | Active stage           |
+| `isLoading`    | `Bool`              | Optional loading state |
+| `onRefresh`    | `() -> Void`        | Refresh callback       |
+
+---
+
+# Features
+
+* Full Amazon-style tracking timeline
+* Admin stage controller
+* Hub/city event logs
+* Dynamic city list from API
+* Expandable event history
+* Works with any backend
+* Reusable Swift Package
+* Supports dark mode
+* Built fully in SwiftUI
+
+---
+
+# Recommended Use Cases
+
+This package is useful for:
 
 * E-commerce apps
-* Courier/logistics apps
-* Food delivery tracking
-* Order management systems
-* Any app requiring timeline progress UI
+* Courier/logistics tracking
+* Food delivery status tracking
+* Order fulfillment dashboards
+* Shipment management systems
 
 ---
 
-#   **Contribution**
+# Testing Example
 
-Feel free to contribute!
-Open a PR or Issue on GitHub.
+To quickly test the full admin tracking system with custom cities:
 
----
+```swift
+struct ContentView: View {
+    var body: some View {
+        DeliveryTrackingAdminView(["Mumbai", "Ahmedabad", "Goa"])
+    }
+}
+```
+
  
