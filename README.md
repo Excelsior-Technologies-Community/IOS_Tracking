@@ -77,10 +77,13 @@ DeliveryStage(
 ### Step 2 — Show Timeline UI
 
 ```swift
-DeliveryTrackingTimelineView(
-    stages: sampleStages,
-    currentStage: .inTransit
-)
+DeliveryTrackingAdminView(
+            stageCities: [
+                .inTransit: ["Mumbai", "Goa"],
+                .arrivedWarehouse: ["UP", "Bihar"],
+                .arrivedCityHub: ["Ahmedabad", "Surat"]
+            ]
+        )
 ```
 
 ---
@@ -143,7 +146,13 @@ To quickly test the full admin tracking system with custom cities:
 ```swift
 struct ContentView: View {
     var body: some View {
-        DeliveryTrackingAdminView(["Mumbai", "Ahmedabad", "Goa"])
+DeliveryTrackingAdminView(
+            stageCities: [
+                .inTransit: ["Mumbai", "Goa"],
+                .arrivedWarehouse: ["UP", "Bihar"],
+                .arrivedCityHub: ["Ahmedabad", "Surat"]
+            ]
+        )
     }
 }
 ```
