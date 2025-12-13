@@ -42,7 +42,7 @@ class DeliveryTrackingViewModel: ObservableObject {
     @Published var showLocationPicker: Bool = false
     @Published var pendingStageUpdate: DeliveryStageType?
 
-    let stageCities: [DeliveryStageType: [String]]   // <-- New
+    let stageCities: [DeliveryStageType: [String]]
 
     init(stageCities: [DeliveryStageType: [String]]) {
         self.stageCities = stageCities
@@ -90,7 +90,7 @@ class DeliveryTrackingViewModel: ObservableObject {
     }
 
     func citiesForStage(_ type: DeliveryStageType) -> [String] {
-        stageCities[type] ?? []  // <-- get correct cities
+        stageCities[type] ?? []
     }
 
     private func needsLocation(_ stage: DeliveryStageType) -> Bool {
@@ -102,6 +102,7 @@ class DeliveryTrackingViewModel: ObservableObject {
         }
     }
 }
+
 
 
 

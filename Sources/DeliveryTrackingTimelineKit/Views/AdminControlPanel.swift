@@ -73,22 +73,25 @@ struct LocationPickerSheet: View {
 
     var body: some View {
         NavigationView {
-            List(viewModel.apiCities, id: \.self) { city in
-                Button {
-                    if let pending = viewModel.pendingStageUpdate {
-                        viewModel.updateStage(pending, city: city)
-                    }
-                    dismiss()
-                } label: {
-                    HStack {
-                        Image(systemName: "mappin.circle.fill").foregroundColor(.blue)
-                        Text(city)
-                        Spacer()
-                        Image(systemName: "chevron.right")
+            
+            if let stage = viewModel.pendingStageUpdate {
+                let cities = viewModel.citiesForStage(stage)
+
+                List(cities, id: \.self) { city in
+                    Button {
+                        viewModel.updateStage(stage, city: city)
+                        dismiss()
+                    } label: {
+                        HStack {
+                            Image(systemName: "mappin.circle.fill").foregroundColor(.blue)
+                            Text(city)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                        }
                     }
                 }
+                .navigationTitle("Choose Hub Location")
             }
-            .navigationTitle("Choose Hub Location")
         }
     }
 }
@@ -98,11 +101,17 @@ struct LocationPickerSheet: View {
 public struct DeliveryTrackingAdminView: View {
 
     @StateObject private var viewModel: DeliveryTrackingViewModel
-    private var apiCities: [String]
 
-    public init(_ cities: [String]) {
-        self.apiCities = cities
-        _viewModel = StateObject(wrappedValue: DeliveryTrackingViewModel(cities: cities))
+    public init() {
+        let stageCities: [DeliveryStageType: [String]] = [
+            .inTransit: ["Mumbai", "Goa"],
+            .arrivedWarehouse: ["UP", "Bihar"],
+            .arrivedCityHub: ["Ahmedabad", "Surat"]
+        ]
+
+        _viewModel = StateObject(
+            wrappedValue: DeliveryTrackingViewModel(stageCities: stageCities)
+        )
     }
 
     public var body: some View {
@@ -132,6 +141,7 @@ public struct DeliveryTrackingAdminView: View {
         }
     }
 }
+
 
 
  
