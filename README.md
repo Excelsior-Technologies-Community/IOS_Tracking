@@ -60,21 +60,8 @@ Represents a single stage in the timeline (ordered, packed, shipped, etc.)
 ---
 
 # Data Models
-
-## DeliveryStage
-
-```swift
-DeliveryStage(
-    type: .inTransit,
-    timestamp: Date(),
-    status: .current,
-    events: [...]
-)
-```
  
----
-
-### Step 2 — Show Timeline UI
+###  — Show Timeline UI
 
 ```swift
 DeliveryTrackingAdminView(
