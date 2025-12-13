@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftUI
 
+
 struct AdminControlPanel: View {
     @ObservedObject var viewModel: DeliveryTrackingViewModel
 
@@ -40,7 +41,6 @@ struct AdminControlPanel: View {
         viewModel.stages.first(where: { $0.type == type })
     }
 }
-
 struct StageButton: View {
     let stageType: DeliveryStageType
     let isCompleted: Bool
@@ -73,7 +73,6 @@ struct LocationPickerSheet: View {
 
     var body: some View {
         NavigationView {
-            
             if let stage = viewModel.pendingStageUpdate {
                 let cities = viewModel.citiesForStage(stage)
 
@@ -96,21 +95,27 @@ struct LocationPickerSheet: View {
     }
 }
 
-
-
 public struct DeliveryTrackingAdminView: View {
 
     @StateObject private var viewModel: DeliveryTrackingViewModel
 
+    // NEW: Public initializer that accepts stageCities dictionary
+    public init(stageCities: [DeliveryStageType: [String]]) {
+        _viewModel = StateObject(
+            wrappedValue: DeliveryTrackingViewModel(stageCities: stageCities)
+        )
+    }
+
+    // DEPRECATED: Keep old initializer for backward compatibility
     public init() {
-        let stageCities: [DeliveryStageType: [String]] = [
+        let defaultStageCities: [DeliveryStageType: [String]] = [
             .inTransit: ["Mumbai", "Goa"],
             .arrivedWarehouse: ["UP", "Bihar"],
             .arrivedCityHub: ["Ahmedabad", "Surat"]
         ]
 
         _viewModel = StateObject(
-            wrappedValue: DeliveryTrackingViewModel(stageCities: stageCities)
+            wrappedValue: DeliveryTrackingViewModel(stageCities: defaultStageCities)
         )
     }
 
@@ -141,7 +146,3 @@ public struct DeliveryTrackingAdminView: View {
         }
     }
 }
-
-
-
- 
