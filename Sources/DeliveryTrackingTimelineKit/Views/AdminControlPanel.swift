@@ -97,16 +97,50 @@ struct LocationPickerSheet: View {
 }
 
 
+
 public struct DeliveryTrackingAdminView: View {
 
     @StateObject private var viewModel: DeliveryTrackingViewModel
 
-    public init(stageCities: [DeliveryStageType: [String]]) {
+    public init() {
+        let stageCities: [DeliveryStageType: [String]] = [
+            .inTransit: ["Mumbai", "Goa"],
+            .arrivedWarehouse: ["UP", "Bihar"],
+            .arrivedCityHub: ["Ahmedabad", "Surat"]
+        ]
+
         _viewModel = StateObject(
             wrappedValue: DeliveryTrackingViewModel(stageCities: stageCities)
         )
     }
 
+    public var body: some View {
+        NavigationView {
+            VStack(spacing: 0) {
+
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ForEach(Array(viewModel.stages.enumerated()), id: \.element.id) { idx, stage in
+                            TimelineRowView(
+                                stage: stage,
+                                isFirst: idx == 0,
+                                isLast: idx == viewModel.stages.count - 1
+                            )
+                        }
+                    }
+                    .padding()
+                }
+
+                Divider()
+                AdminControlPanel(viewModel: viewModel)
+            }
+            .navigationTitle("Delivery Tracking")
+            .sheet(isPresented: $viewModel.showLocationPicker) {
+                LocationPickerSheet(viewModel: viewModel)
+            }
+        }
+    }
+}
 
 
 
