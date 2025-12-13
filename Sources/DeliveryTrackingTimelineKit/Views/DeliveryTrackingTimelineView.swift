@@ -42,10 +42,10 @@ class DeliveryTrackingViewModel: ObservableObject {
     @Published var showLocationPicker: Bool = false
     @Published var pendingStageUpdate: DeliveryStageType?
 
-    let apiCities: [String]   // <-- cities from API
+    let stageCities: [DeliveryStageType: [String]]   // <-- New
 
-    init(cities: [String]) {
-        self.apiCities = cities
+    init(stageCities: [DeliveryStageType: [String]]) {
+        self.stageCities = stageCities
         setupInitialStages()
     }
 
@@ -75,8 +75,6 @@ class DeliveryTrackingViewModel: ObservableObject {
         stages[idx].status = .completed
 
         if let city = city {
-            print("Stage \(stage.rawValue) updated at city: \(city)")
-
             let event = TrackingEvent(
                 city: city,
                 hubName: "\(city) Hub",
@@ -91,6 +89,10 @@ class DeliveryTrackingViewModel: ObservableObject {
         }
     }
 
+    func citiesForStage(_ type: DeliveryStageType) -> [String] {
+        stageCities[type] ?? []  // <-- get correct cities
+    }
+
     private func needsLocation(_ stage: DeliveryStageType) -> Bool {
         switch stage {
         case .arrivedCityHub, .arrivedWarehouse, .inTransit:
@@ -100,6 +102,7 @@ class DeliveryTrackingViewModel: ObservableObject {
         }
     }
 }
+
 
 
 
