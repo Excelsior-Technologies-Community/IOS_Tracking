@@ -78,18 +78,7 @@ DeliveryTrackingAdminView(
 This will show these exact cities inside the location picker when stages require hub selection.
 
 ---
-
-# Customizable Parameters
-
-| Parameter      | Type                | Description            |
-| -------------- | ------------------- | ---------------------- |
-| `stages`       | `[DeliveryStage]`   | Timeline data          |
-| `currentStage` | `DeliveryStageType` | Active stage           |
-| `isLoading`    | `Bool`              | Optional loading state |
-| `onRefresh`    | `() -> Void`        | Refresh callback       |
-
----
-
+ 
 # Features
 
 * Full Amazon-style tracking timeline
