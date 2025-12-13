@@ -66,7 +66,13 @@ If your app fetches hubs from an API, simply pass them to:
 ### DeliveryTrackingAdminView
 
 ```swift
-DeliveryTrackingAdminView(["Mumbai", "Ahmedabad", "Goa"])
+DeliveryTrackingAdminView(
+            stageCities: [
+                .inTransit: ["Mumbai", "Goa"],
+                .arrivedWarehouse: ["UP", "Bihar"],
+                .arrivedCityHub: ["Ahmedabad", "Surat"]
+            ]
+        )
 ```
 
 This will show these exact cities inside the location picker when stages require hub selection.
