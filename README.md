@@ -58,23 +58,7 @@ Represents an event within a stage.
 Represents a single stage in the timeline (ordered, packed, shipped, etc.)
 
 ---
-
-# Data Models
  
-###  — Show Timeline UI
-
-```swift
-DeliveryTrackingAdminView(
-            stageCities: [
-                .inTransit: ["Mumbai", "Goa"],
-                .arrivedWarehouse: ["UP", "Bihar"],
-                .arrivedCityHub: ["Ahmedabad", "Surat"]
-            ]
-        )
-```
-
----
-
 # Dynamic API-Based City Selection
 
 If your app fetches hubs from an API, simply pass them to:
